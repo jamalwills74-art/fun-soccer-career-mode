@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poluser Pro Career 26 | Global Edition</title>
+    <title>Poluser Pro Career 26 | Global Fix</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -26,7 +26,7 @@
         }
         h2, h3 { color: #00ff88; text-align: center; margin-top: 0; }
         .screen { display: none; }
-        .active { block; display: block; }
+        .active { display: block; }
         
         .hud {
             background: #0d1117;
@@ -180,7 +180,8 @@
         </select>
 
         <label>Select Nationality (Top 50 Nations)</label>
-        <select id="setup-nation"></select>
+        <select id="setup-nation">
+            </select>
 
         <label>Select Club League</label>
         <select id="setup-league" onchange="populateClubs()">
@@ -191,7 +192,8 @@
         </select>
 
         <label>Select Starting Youth Academy</label>
-        <select id="setup-club"></select>
+        <select id="setup-club">
+            </select>
 
         <label>Starting Career Path</label>
         <select id="setup-path">
@@ -279,7 +281,6 @@
 </div>
 
 <script>
-    // Exact Top 50 National Teams from real world rankings
     const top50Nations = [
         {name: "Argentina", rating: 88}, {name: "Spain", rating: 87}, {name: "France", rating: 87}, 
         {name: "England", rating: 86}, {name: "Portugal", rating: 85}, {name: "Brazil", rating: 85}, 
@@ -300,7 +301,6 @@
         {name: "Venezuela", rating: 69}, {name: "Uzbekistan", rating: 68}
     ];
 
-    // Expanded Club Squads matching authentic real world data values
     const leagues = {
         "Premier League": [
             {name: "Man City", rating: 88}, {name: "Arsenal", rating: 86}, {name: "Liverpool", rating: 85}, 
@@ -309,8 +309,7 @@
             {name: "West Ham", rating: 78}, {name: "Bournemouth", rating: 77}, {name: "Fulham", rating: 77}, 
             {name: "Crystal Palace", rating: 76}, {name: "Everton", rating: 76}, {name: "Brentford", rating: 75}, 
             {name: "Wolves", rating: 75}, {name: "Nottingham Forest", rating: 74}, {name: "Leeds United", rating: 73}, 
-            {name: "Leicester City", rating: 73}, {name: "Ipswich Town", rating: 72}, {name: "Southampton", rating: 71},
-            {name: "Sunderland", rating: 71}, {name: "Coventry City", rating: 70}, {name: "Hull City", rating: 70}
+            {name: "Leicester City", rating: 73}, {name: "Ipswich Town", rating: 72}, {name: "Southampton", rating: 71}
         ],
         "La Liga": [
             {name: "Real Madrid", rating: 89}, {name: "Barcelona", rating: 86}, {name: "Atletico Madrid", rating: 84}, 
@@ -319,8 +318,7 @@
             {name: "Valencia", rating: 76}, {name: "Osasuna", rating: 76}, {name: "Getafe", rating: 75}, 
             {name: "Celta Vigo", rating: 75}, {name: "Rayo Vallecano", rating: 74}, {name: "Mallorca", rating: 74}, 
             {name: "Alaves", rating: 73}, {name: "Las Palmas", rating: 73}, {name: "Espanyol", rating: 72}, 
-            {name: "Leganes", rating: 72}, {name: "Real Valladolid", rating: 71}, {name: "Cadiz", rating: 71},
-            {name: "Granada", rating: 70}, {name: "Almeria", rating: 70}, {name: "Eibar", rating: 69}
+            {name: "Leganes", rating: 72}, {name: "Real Valladolid", rating: 71}, {name: "Almeria", rating: 70}
         ],
         "Bundesliga": [
             {name: "Bayern Munich", rating: 87}, {name: "Bayer Leverkusen", rating: 86}, {name: "Borussia Dortmund", rating: 84}, 
@@ -328,9 +326,8 @@
             {name: "Freiburg", rating: 78}, {name: "Hoffenheim", rating: 77}, {name: "Wolfsburg", rating: 76}, 
             {name: "Werder Bremen", rating: 76}, {name: "Augsburg", rating: 75}, {name: "Gladbach", rating: 75}, 
             {name: "Heidenheim", rating: 74}, {name: "Union Berlin", rating: 74}, {name: "Mainz 05", rating: 73}, 
-            {name: "Bochum", rating: 72}, {name: "St. Pauli", rating: 71}, {name: "Holstein Kiel", rating: 71},
-            {name: "Koln", rating: 71}, {name: "Darmstadt", rating: 69}, {name: "Schalke 04", rating: 70},
-            {name: "Hertha Berlin", rating: 70}, {name: "Hamburger SV", rating: 70}, {name: "Fortuna Dusseldorf", rating: 69}
+            {name: "Bochum", rating: 72}, {name: "Koln", rating: 71}, {name: "Schalke 04", rating: 70},
+            {name: "Hertha Berlin", rating: 70}, {name: "Hamburger SV", rating: 70}, {name: "Darmstadt", rating: 69}
         ],
         "Serie A": [
             {name: "Inter Milan", rating: 86}, {name: "AC Milan", rating: 84}, {name: "Juventus", rating: 84}, 
@@ -339,8 +336,7 @@
             {name: "Torino", rating: 77}, {name: "Monza", rating: 75}, {name: "Genoa", rating: 75}, 
             {name: "Udinese", rating: 74}, {name: "Lecce", rating: 73}, {name: "Empoli", rating: 73}, 
             {name: "Hellas Verona", rating: 73}, {name: "Cagliari", rating: 72}, {name: "Parma", rating: 72}, 
-            {name: "Como", rating: 72}, {name: "Venezia", rating: 71}, {name: "Sassuolo", rating: 72},
-            {name: "Frosinone", rating: 71}, {name: "Salernitana", rating: 69}, {name: "Sampdoria", rating: 70}
+            {name: "Como", rating: 72}, {name: "Sassuolo", rating: 72}, {name: "Sampdoria", rating: 70}
         ]
     };
 
@@ -352,24 +348,34 @@
     let matchesPlayed = 0;
     let isSeniorTeam = false;
 
-    // Load initial Dropdowns safely 
-    window.onload = function() {
+    // FORCED IMMEDIATE EXECUTION RULE
+    function initializeGameSetup() {
         const nSel = document.getElementById('setup-nation');
-        nSel.innerHTML = "";
-        top50Nations.forEach(nat => {
-            nSel.add(new Option(`${nat.name} (OVR ${nat.rating})`, nat.name));
-        });
+        if (nSel) {
+            nSel.innerHTML = "";
+            top50Nations.forEach(nat => {
+                nSel.add(new Option(`${nat.name} (OVR ${nat.rating})`, nat.name));
+            });
+        }
         populateClubs();
-    };
+    }
 
     function populateClubs() {
-        const l = document.getElementById('setup-league').value;
+        const lSel = document.getElementById('setup-league');
         const cSel = document.getElementById('setup-club');
+        if (!lSel || !cSel) return;
+        
+        const l = lSel.value;
         cSel.innerHTML = "";
-        leagues[l].forEach(team => {
-            cSel.add(new Option(`${team.name} Youth Academy (OVR ${team.rating})`, team.name));
-        });
+        if (leagues[l]) {
+            leagues[l].forEach(team => {
+                cSel.add(new Option(`${team.name} Youth Academy (OVR ${team.rating})`, team.name));
+            });
+        }
     }
+
+    // Direct initialization invocation
+    setTimeout(initializeGameSetup, 50);
 
     function buildStandings() {
         leagueTable = [];
@@ -505,7 +511,6 @@
             ball.style.left = Math.floor(Math.random() * 85) + "%";
             ball.style.top = Math.floor(Math.random() * 75) + "%";
 
-            // Relative advantage calculations
             let advantageFactor = (myTeamStrength - opponentStrength) * 0.022; 
             let oppChance = 0.18 - advantageFactor;
             let myChance = 0.18 + advantageFactor;
