@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poluser Career Mode</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            background: #1e1e1e;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        h1 { color: #00ff88; text-align: center; margin-top: 0; }
+        .stats-box {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .stat { font-weight: bold; color: #aaa; }
+        .stat span { color: #fff; }
+        .story-text {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: left;
+        }
+        .btn:hover { background: #00cc6e; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <h1>🏆 Career Mode</h1>
+    
+    <div class="stats-box">
+        <div class="stat">Player: <span id="p-name">Poluser (#7)</span></div>
+        <div class="stat">OVR: <span id="p-ovr" style="color:#00ff88">99</span></div>
+        <div class="stat">Club: <span id="p-club">West Ham</span></div>
+        <div class="stat">Energy: <span id="p-energy">100%</span></div>
+    </div>
+
+    <div class="story-text" id="story">
+        Welcome, Poluser! You are the 99-rated prodigy of the West Ham Academy. It's the 88th minute against Tottenham. You break through the defense one-on-one with the keeper! What do you do?
+    </div>
+
+    <div id="choices">
+        </div>
+</div>
+
+<script>
+    let energy = 100;
+    let club = "West Ham U21";
+
+    const storyEl = document.getElementById('story');
+    const choicesEl = document.getElementById('choices');
+    const energyEl = document.getElementById('p-energy');
+    const clubEl = document.getElementById('p-club');
+
+    function updateStats() {
+        energyEl.innerText = energy + "%";
+        clubEl.innerText = club;
+    }
+
+    const script = {
+        start: {
+            text: "Welcome, Poluser! You are the 99-rated prodigy of the West Ham Academy. It's the 88th minute against Tottenham. You break through the defense one-on-one with the keeper!",
+            choices: [
+                { text: "A: Smash a near-post shot", target: 'failed_shot' },
+                { text: "B: Rainbow flick over the keeper", target: 'rainbow_goal' }
+            ]
+        },
+        failed_shot: {
+            text: "The keeper makes a lucky save! The game ends 1-1. The first-team coach thinks you need to work on your decision-making.",
+            choices: [{ text: "Try Again", target: 'start' }]
+        },
+        rainbow_goal: {
+            text: "Flawless! The ball bounces into the net. The clip goes viral. You get called up to train with the senior West Ham squad! During practice, a defender rushes you with a hard slide tackle.",
+            action: () => { energy -= 10; updateStats(); },
+            choices: [
+                { text: "A: Use 99 agility to skip past him", target: 'senior_debut' },
+                { text: "B: Jump out of the way safely", target: 'bench_warmer' }
+            ]
+        },
+        bench_warmer: {
+            text: "You avoided injury, but looked timid. You're left out of the matchday squad.",
+            choices: [{ text: "Restart Session", target: 'rainbow_goal' }]
+        },
+        senior_debut: {
+            text: "You leave him in the dust and curl it top corner! The manager is amazed and hands you your Premier League debut against Man United. 89th minute, you spot the keeper off his line from the halfway line!",
+            action: () => { energy -= 10; updateStats(); },
+            choices: [
+                { text: "A: Shoot from the halfway line!", target: 'madrid_offer' },
+                { text: "B: Pass it wide to play safe", target: 'draw_game' }
+            ]
+        },
+        draw_game: {
+            text: "The pass is intercepted. The match ends in a boring draw. Back to training!",
+            choices: [{ text: "Restart Match", target: 'senior_debut' }]
+        },
+        madrid_offer: {
+            text: "GOAL! A historic 50-yard debut lob! The next morning, Real Madrid submits a massive €80M bid. They want you immediately.",
+            action: () => { energy -= 15; updateStats(); },
+            choices: [
+                { text: "A: Sign for Real Madrid ⚪", target: 'madrid_won' },
+                { text: "B: Stay at West Ham ⚒️", target: 'ham_legend' }
+            ]
+        },
+        madrid_won: {
+            text: "¡Hala Madrid! You sign for Real Madrid, win the Champions League, and win the Ballon d'Or at 18 years old! You have conquered football!",
+            action: () => { club = "Real Madrid"; updateStats(); },
+            choices: [{ text: "Play Again", target: 'start' }]
+        },
+        ham_legend: {
+            text: "You stay and become a West Ham legend, leading them to historic trophies. A true local icon!",
+            choices: [{ text: "Play Again", target: 'start' }]
+        }
+    };
+
+    function loadScene(sceneKey) {
+        const scene = script[sceneKey];
+        storyEl.innerText = scene.text;
+        choicesEl.innerHTML = '';
+        
+        if (scene.action) scene.action();
+
+        scene.choices.forEach(choice => {
+            const button = document.createElement('button');
+            button.className = 'btn';
+            button.innerText = choice.text;
+            button.onclick = () => loadScene(choice.target);
+            choicesEl.appendChild(button);
+        });
+    }
+
+    // Start the game
+    loadScene('start');
+</script>
+
+</body>
+</html>
