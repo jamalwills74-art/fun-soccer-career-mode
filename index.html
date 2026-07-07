@@ -3,44 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poluser Career Mode</title>
+    <title>Poluser Ultimate Career Mode Pro</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #121212;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #0c0f12;
             color: #ffffff;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             justify-content: center;
         }
-        .phone-container {
+        .app-container {
             width: 100%;
-            max-width: 400px;
-            background: #1e1e1e;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            border: 1px solid #333;
+            max-width: 420px;
+            background: #161b22;
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+            border: 1px solid #30363d;
+            box-sizing: border-box;
         }
-        h1 { color: #00ff88; text-align: center; margin-top: 0; }
-        .stats-box {
-            background: #2a2a2a;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 20px;
+        h1, h2, h3 { color: #00ff88; text-align: center; margin-top: 0; }
+        .screen { display: none; }
+        .active { display: block; }
+        
+        /* Stats Dashboard */
+        .hud {
+            background: #0d1117;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 13px;
+            border: 1px solid #21262d;
         }
-        .stat { font-weight: bold; color: #aaa; }
-        .stat span { color: #fff; }
-        .story-text {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            min-height: 100px;
+        .hud-item { font-weight: bold; color: #8b949e; }
+        .hud-item span { color: #fff; }
+
+        /* Navigation Menu */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #0d1117;
+            padding: 8px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #21262d;
+            gap: 2px;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #8b949e;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 6px 4px;
+            border-radius: 6px;
+            flex: 1;
+            text-align: center;
+        }
+        .nav-btn.active-tab { background: #00ff88; color: #000; }
+
+        /* Forms & Interactive Items */
+        label { display: block; margin: 8px 0 4px; font-size: 14px; color: #c9d1d9; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #fff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
         }
         .btn {
             display: block;
@@ -49,124 +87,370 @@
             color: #000;
             border: none;
             padding: 12px;
-            margin-bottom: 10px;
+            margin: 8px 0;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
-            text-align: left;
+            text-align: center;
         }
         .btn:hover { background: #00cc6e; }
+
+        /* Pitch Simulation Box */
+        .pitch-container {
+            background: #1e4620;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            height: 140px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .center-circle {
+            border: 2px solid rgba(255,255,255,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .ball {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transition: all 0.4s ease;
+        }
+        
+        .list-card {
+            background: #21262d;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #30363d;
+        }
     </style>
 </head>
 <body>
 
-<div class="phone-container">
-    <h1>🏆 Career Mode</h1>
-    
-    <div class="stats-box">
-        <div class="stat">Player: <span id="p-name">Poluser (#7)</span></div>
-        <div class="stat">OVR: <span id="p-ovr" style="color:#00ff88">99</span></div>
-        <div class="stat">Club: <span id="p-club">West Ham</span></div>
-        <div class="stat">Energy: <span id="p-energy">100%</span></div>
+<div class="app-container">
+    <div id="screen-setup" class="screen active">
+        <h2>⚽ Create Pro Player</h2>
+        <label>First Name</label>
+        <input type="text" id="setup-first" value="Poluser">
+        
+        <label>Last Name</label>
+        <input type="text" id="setup-last" value="Seven">
+
+        <label>Position</label>
+        <select id="setup-pos">
+            <option value="ST">Striker (ST)</option>
+            <option value="LW">Left Winger (LW)</option>
+            <option value="CAM">Midfielder (CAM)</option>
+            <option value="CB">Center Back (CB)</option>
+            <option value="GK">Goalkeeper (GK)</option>
+        </select>
+
+        <label>Nationality (With Real Tiers)</label>
+        <select id="setup-nation">
+            <option value="France">France (Tier 1 - Euro/World Cup)</option>
+            <option value="Argentina">Argentina (Tier 1 - Copa/World Cup)</option>
+            <option value="England">England (Tier 1 - Euro)</option>
+            <option value="Japan">Japan (Tier 2 - Asian Cup)</option>
+            <option value="Nigeria">Nigeria (Tier 2 - African Cup)</option>
+            <option value="USA">USA (Tier 2 - Gold Cup)</option>
+        </select>
+
+        <label>Starting Path</label>
+        <select id="setup-path">
+            <option value="underdog">Academy Underdog (35-55 OVR)</option>
+            <option value="potential">Top Prospect (55-80 OVR)</option>
+            <option value="legend">The Next Legend (80-100 OVR)</option>
+        </select>
+
+        <label>Starting Youth Academy</label>
+        <select id="setup-club">
+            <option value="West Ham Youth Academy">West Ham Carrington Academy</option>
+            <option value="Real Madrid La Fábrica">Real Madrid La Fábrica</option>
+            <option value="Manchester City Elite Academy">Man City EDS Academy</option>
+        </select>
+
+        <button class="btn" onclick="startGame()">Kick Off Career</button>
     </div>
 
-    <div class="story-text" id="story">
-        Welcome, Poluser! You are the 99-rated prodigy of the West Ham Academy. It's the 88th minute against Tottenham. You break through the defense one-on-one with the keeper! What do you do?
-    </div>
-
-    <div id="choices">
+    <div id="game-hub" style="display:none;">
+        <div class="hud">
+            <div class="hud-item">Player: <span id="hud-name">Poluser</span></div>
+            <div class="hud-item">Age: <span id="hud-age">16</span>/40</div>
+            <div class="hud-item">Club: <span id="hud-club">-</span></div>
+            <div class="hud-item">Nation: <span id="hud-nation">-</span></div>
+            <div class="hud-item">OVR: <span id="hud-ovr" style="color:#00ff88">0</span></div>
+            <div class="hud-item">Energy: <span id="hud-energy">100%</span></div>
+            <div class="hud-item">Coins: <span id="hud-coins" style="color:#00ff88">0</span></div>
+            <div class="hud-item">Status: <span id="hud-status" style="color:#00ff88">Academy</span></div>
         </div>
+
+        <div class="nav-bar">
+            <button class="nav-btn active-tab" id="tab-match" onclick="showTab('match')">MATCH</button>
+            <button class="nav-btn" id="tab-skills" onclick="showTab('skills')">SKILLS</button>
+            <button class="nav-btn" id="tab-social" onclick="showTab('social')">RELATIONS</button>
+            <button class="nav-btn" id="tab-academy" onclick="showTab('academy')">SQUAD</button>
+            <button class="nav-btn" id="tab-shop" onclick="showTab('shop')">SHOP</button>
+        </div>
+
+        <div id="view-match" class="tab-view">
+            <h3 id="match-type-header">Club Academy Match</h3>
+            <div id="match-status-text">Ready for your fixture. Ready to play?</div>
+            
+            <div class="pitch-container" id="pitch">
+                <div class="center-circle"></div>
+                <div class="ball" id="pitch-ball"></div>
+            </div>
+            
+            <div id="match-ticker" style="font-style: italic; min-height: 20px; text-align: center; color: #8b949e; margin-bottom: 10px;"></div>
+            <button class="btn" id="play-match-btn" onclick="runMatchEngine()">Play Match</button>
+        </div>
+
+        <div id="view-skills" class="tab-view" style="display:none;">
+            <h3>Player Attributes</h3>
+            <p style="font-size:11px; color:#8b949e;">Train skills to boost them. Un-trained skills drop over time!</p>
+            <div class="list-card">
+                <div>Pace: <span id="sk-pace">50</span>/99</div>
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="trainSkill('pace')">Train Pace (-15 Energy)</button>
+            </div>
+            <div class="list-card">
+                <div>Shooting: <span id="sk-shoot">50</span>/99</div>
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="trainSkill('shoot')">Train Shooting (-15 Energy)</button>
+            </div>
+            <div class="list-card">
+                <div>Passing: <span id="sk-pass">50</span>/99</div>
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="trainSkill('pass')">Train Passing (-15 Energy)</button>
+            </div>
+        </div>
+
+        <div id="view-social" class="tab-view" style="display:none;">
+            <h3>Relationships</h3>
+            <div class="list-card">
+                <div>Family bond: <span id="rel-family">80</span>/100</div>
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="interact('family')">Visit Family (-10 Energy)</button>
+            </div>
+            <div class="list-card">
+                <div>Coach Trust: <span id="rel-coach">80</span>/100</div>
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="interact('coach')">Talk Strategy (-10 Energy)</button>
+            </div>
+            <div class="list-card">
+                <div>Girlfriend: <span id="rel-gf">80</span>/100</div>
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="interact('gf')">Date Night (-10 Energy)</button>
+            </div>
+        </div>
+
+        <div id="view-academy" class="tab-view" style="display:none;">
+            <h3>Squad & Academy Status</h3>
+            <div class="list-card" id="academy-info-card">
+                <strong>Current Team Status:</strong> <span id="status-text-panel">Academy Prospect</span><br>
+                <p style="font-size:12px; color:#8b949e;" id="promotion-condition">Reach 70 OVR to be promoted from the youth squad into the Senior First Team!</p>
+            </div>
+            <div class="list-card">
+                <strong>International Team Call-up:</strong><br>
+                <span id="intl-status-text">Not selected yet. Raise your Coach Trust and OVR to earn your first cap!</span>
+            </div>
+        </div>
+
+        <div id="view-shop" class="tab-view" style="display:none;">
+            <h3>Energy Drink Shop</h3>
+            <div class="list-card">
+                <strong>Cheap Energy Can</strong> (+20 Energy)<br>💵 Cost: 10 Coins
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="buyCan(10, 20)">Buy Can</button>
+            </div>
+            <div class="list-card">
+                <strong>Pro Boost Can</strong> (+50 Energy)<br>💵 Cost: 30 Coins
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="buyCan(30, 50)">Buy Can</button>
+            </div>
+            <div class="list-card">
+                <strong>Elite Fuel Can</strong> (+75 Energy)<br>💵 Cost: 50 Coins
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="buyCan(50, 75)">Buy Can</button>
+            </div>
+            <div class="list-card">
+                <strong>Legendary Hyper Can</strong> (+100 Energy)<br>💵 Cost: 100 Coins
+                <button class="btn" style="padding:4px; margin:4px 0 0;" onclick="buyCan(100, 100)">Buy Can</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    let energy = 100;
-    let club = "West Ham U21";
+    let pName = "", pPos = "", age = 16, club = "", nation = "", energy = 100, coins = 0;
+    let stats = { pace: 50, shoot: 50, pass: 50 };
+    let relations = { family: 80, coach: 80, gf: 80 };
+    let matchesPlayed = 0;
+    let isSeniorTeam = false;
+    let isIntlCalledUp = false;
 
-    const storyEl = document.getElementById('story');
-    const choicesEl = document.getElementById('choices');
-    const energyEl = document.getElementById('p-energy');
-    const clubEl = document.getElementById('p-club');
-
-    function updateStats() {
-        energyEl.innerText = energy + "%";
-        clubEl.innerText = club;
-    }
-
-    const script = {
-        start: {
-            text: "Welcome, Poluser! You are the 99-rated prodigy of the West Ham Academy. It's the 88th minute against Tottenham. You break through the defense one-on-one with the keeper!",
-            choices: [
-                { text: "A: Smash a near-post shot", target: 'failed_shot' },
-                { text: "B: Rainbow flick over the keeper", target: 'rainbow_goal' }
-            ]
-        },
-        failed_shot: {
-            text: "The keeper makes a lucky save! The game ends 1-1. The first-team coach thinks you need to work on your decision-making.",
-            choices: [{ text: "Try Again", target: 'start' }]
-        },
-        rainbow_goal: {
-            text: "Flawless! The ball bounces into the net. The clip goes viral. You get called up to train with the senior West Ham squad! During practice, a defender rushes you with a hard slide tackle.",
-            action: () => { energy -= 10; updateStats(); },
-            choices: [
-                { text: "A: Use 99 agility to skip past him", target: 'senior_debut' },
-                { text: "B: Jump out of the way safely", target: 'bench_warmer' }
-            ]
-        },
-        bench_warmer: {
-            text: "You avoided injury, but looked timid. You're left out of the matchday squad.",
-            choices: [{ text: "Restart Session", target: 'rainbow_goal' }]
-        },
-        senior_debut: {
-            text: "You leave him in the dust and curl it top corner! The manager is amazed and hands you your Premier League debut against Man United. 89th minute, you spot the keeper off his line from the halfway line!",
-            action: () => { energy -= 10; updateStats(); },
-            choices: [
-                { text: "A: Shoot from the halfway line!", target: 'madrid_offer' },
-                { text: "B: Pass it wide to play safe", target: 'draw_game' }
-            ]
-        },
-        draw_game: {
-            text: "The pass is intercepted. The match ends in a boring draw. Back to training!",
-            choices: [{ text: "Restart Match", target: 'senior_debut' }]
-        },
-        madrid_offer: {
-            text: "GOAL! A historic 50-yard debut lob! The next morning, Real Madrid submits a massive €80M bid. They want you immediately.",
-            action: () => { energy -= 15; updateStats(); },
-            choices: [
-                { text: "A: Sign for Real Madrid ⚪", target: 'madrid_won' },
-                { text: "B: Stay at West Ham ⚒️", target: 'ham_legend' }
-            ]
-        },
-        madrid_won: {
-            text: "¡Hala Madrid! You sign for Real Madrid, win the Champions League, and win the Ballon d'Or at 18 years old! You have conquered football!",
-            action: () => { club = "Real Madrid"; updateStats(); },
-            choices: [{ text: "Play Again", target: 'start' }]
-        },
-        ham_legend: {
-            text: "You stay and become a West Ham legend, leading them to historic trophies. A true local icon!",
-            choices: [{ text: "Play Again", target: 'start' }]
-        }
-    };
-
-    function loadScene(sceneKey) {
-        const scene = script[sceneKey];
-        storyEl.innerText = scene.text;
-        choicesEl.innerHTML = '';
+    function startGame() {
+        const first = document.getElementById('setup-first').value;
+        const last = document.getElementById('setup-last').value;
+        pName = first + " " + last;
+        pPos = document.getElementById('setup-pos').value;
+        club = document.getElementById('setup-club').value;
+        nation = document.getElementById('setup-nation').value;
         
-        if (scene.action) scene.action();
+        const path = document.getElementById('setup-path').value;
+        let baseRating = 50;
+        if (path === 'underdog') baseRating = Math.floor(Math.random() * (55 - 35 + 1)) + 35;
+        if (path === 'potential') baseRating = Math.floor(Math.random() * (80 - 55 + 1)) + 55;
+        if (path === 'legend') baseRating = Math.floor(Math.random() * (100 - 80 + 1)) + 80;
 
-        scene.choices.forEach(choice => {
-            const button = document.createElement('button');
-            button.className = 'btn';
-            button.innerText = choice.text;
-            button.onclick = () => loadScene(choice.target);
-            choicesEl.appendChild(button);
-        });
+        stats.pace = baseRating;
+        stats.shoot = baseRating;
+        stats.pass = baseRating;
+
+        document.getElementById('screen-setup').style.display = 'none';
+        document.getElementById('game-hub').style.display = 'block';
+        
+        updateUI();
     }
 
-    // Start the game
-    loadScene('start');
+    function updateUI() {
+        const ovr = Math.round((stats.pace + stats.shoot + stats.pass) / 3);
+        
+        // Progression Checks
+        if (ovr >= 70 && !isSeniorTeam) {
+            isSeniorTeam = true;
+            club = club.replace("Academy", "").replace("La Fábrica", "").replace("Youth", "") + " Senior Pro";
+            alert("🔥 Congratulations! You have been promoted out of the Youth Academy into the First Team!");
+        }
+        if (ovr >= 82 && relations.coach >= 85 && !isIntlCalledUp) {
+            isIntlCalledUp = true;
+            alert(`🌍 Huge News! You've been selected for the ${nation} National Team squad!`);
+        }
+
+        document.getElementById('hud-name').innerText = pName + " (" + pPos + ")";
+        document.getElementById('hud-age').innerText = age;
+        document.getElementById('hud-club').innerText = club;
+        document.getElementById('hud-nation').innerText = nation;
+        document.getElementById('hud-ovr').innerText = ovr;
+        document.getElementById('hud-energy').innerText = energy + "%";
+        document.getElementById('hud-coins').innerText = coins;
+        document.getElementById('hud-status').innerText = isSeniorTeam ? "Senior Pro" : "Academy";
+
+        // Squad Tab
+        document.getElementById('status-text-panel').innerText = isSeniorTeam ? "Senior Starting XI" : "Academy Prospect";
+        document.getElementById('promotion-condition').innerText = isSeniorTeam ? "You are a first-team starter! Keep training to hold your spot." : "Reach 70 OVR to be promoted from the youth squad into the Senior First Team!";
+        document.getElementById('intl-status-text').innerText = isIntlCalledUp ? `Active International Selection for ${nation}` : "Not selected yet. Reach 82+ OVR and 85+ Coach Trust to represent your country.";
+
+        // Skills & Relations
+        document.getElementById('sk-pace').innerText = stats.pace;
+        document.getElementById('sk-shoot').innerText = stats.shoot;
+        document.getElementById('sk-pass').innerText = stats.pass;
+        document.getElementById('rel-family').innerText = relations.family;
+        document.getElementById('rel-coach').innerText = relations.coach;
+        document.getElementById('rel-gf').innerText = relations.gf;
+
+        // Dynamic Match Header Setup
+        const matchHeader = document.getElementById('match-type-header');
+        if (isIntlCalledUp && matchesPlayed % 3 === 0) {
+            matchHeader.innerText = `🌍 International Qualifier (${nation})`;
+        } else {
+            matchHeader.innerText = isSeniorTeam ? "🏆 League Matchday" : "⚽ Club Academy Match";
+        }
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-view').forEach(view => view.style.display = 'none');
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-tab'));
+        
+        document.getElementById('view-' + tabName).style.display = 'block';
+        document.getElementById('tab-' + tabName).classList.add('active-tab');
+    }
+
+    function trainSkill(skill) {
+        if (energy < 15) { alert("Too tired! Buy an energy drink."); return; }
+        energy -= 15;
+        if (stats[skill] < 99) stats[skill] += 2;
+        
+        for (let s in stats) {
+            if (s !== skill && stats[s] > 1) stats[s] -= 1;
+        }
+        updateUI();
+    }
+
+    function interact(type) {
+        if (energy < 10) { alert("Too tired!"); return; }
+        energy -= 10;
+        if (relations[type] < 100) relations[type] = Math.min(100, relations[type] + 15);
+        updateUI();
+    }
+
+    function buyCan(cost, gain) {
+        if (coins < cost) { alert("Not enough coins!"); return; }
+        coins -= cost;
+        energy = Math.min(100, energy + gain);
+        updateUI();
+    }
+
+    function runMatchEngine() {
+        if (age >= 40) {
+            alert("You have reached 40 and retired! Your legendary career is over.");
+            return;
+        }
+        if (energy < 30) {
+            alert("Energy too low! You risk a serious injury. Grab a drink from the shop.");
+            return;
+        }
+
+        energy -= 25;
+        const ball = document.getElementById('pitch-ball');
+        const ticker = document.getElementById('match-ticker');
+        const playBtn = document.getElementById('play-match-btn');
+        playBtn.disabled = true;
+
+        let clock = 0;
+        let matchInterval = setInterval(() => {
+            clock += 30;
+            ball.style.left = Math.floor(Math.random() * 90) + "%";
+            ball.style.top = Math.floor(Math.random() * 80) + "%";
+            
+            if(clock === 30) ticker.innerText = "15' - Opening challenges fly in. Team pressing hard!";
+            if(clock === 60) ticker.innerText = "60' - Tactical changes made. The game is opening up!";
+            if(clock === 90) ticker.innerText = "90' - Full time whistle blown!";
+
+            if (clock >= 90) {
+                clearInterval(matchInterval);
+                
+                const socialAvg = (relations.family + relations.coach + relations.gf) / 3;
+                let finalRating = Math.floor(Math.random() * (10 - 4 + 1)) + 4;
+                if (socialAvg < 40) finalRating = Math.max(3, finalRating - 2); 
+
+                let earnings = 0;
+                if (finalRating === 10) earnings = 50;
+                else if (finalRating === 3) earnings = 2;
+                else {
+                    earnings = Math.round(2 + ((finalRating - 3) * (48 / 7)));
+                }
+
+                coins += earnings;
+                matchesPlayed++;
+
+                relations.family = Math.max(0, relations.family - 6);
+                relations.coach = Math.max(0, relations.coach - 5);
+                relations.gf = Math.max(0, relations.gf - 7);
+
+                if (matchesPlayed % 10 === 0) {
+                    age += 1;
+                    alert(`🎉 End of Season! You turned ${age} years old.`);
+                }
+
+                ticker.innerText = `FT Match Rating: ${finalRating}/10! Earned: ${earnings} Coins.`;
+                playBtn.disabled = false;
+                updateUI();
+            }
+        }, 1000);
+    }
 </script>
 
 </body>
